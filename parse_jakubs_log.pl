@@ -15,13 +15,31 @@ my %values;        # hash
 while ( my $line = <$filehandle> ) {
 
     # Start of section
-    if ( $line =~ /^Energ.*between/i ) {
+    if (
+        $line =~ /^       # beginning of line
+                  Energ   # literal string
+                  .*      # any number of anything except for newline
+                  between # literal string
+                 /ix      # ignore case and allow comments and whitespace in regex
+      )
+    {
         $in_section = 1;
         next;
     }
 
     # End of section
-    if ( $line =~ /^\s*Total Energy.*kJ\/mol$/i ) {
+    if (
+        $line =~ /^            # beginning of line
+                  \s*          # any number of whitespace characters
+                  Total Energy # literal string
+                  .*           # any number of anything except for newline
+                  kJ           # literal string
+                  \/           # literal forward slash
+                  mol          # literal string
+                  $            # end of line
+                 /ix           # ignore case and allow comments and whitespace in regex
+      )
+    {
         $in_section = 0;
         process_lines(@lines);
         next;
