@@ -1,7 +1,6 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-
 # Create folder hierarchy based on MP3 tags.
 # Based on: http://www.perlmonks.org/?node_id=985820
 # To get mp3 files from directories
@@ -23,19 +22,15 @@ foreach my $file (<*.mp3>) {
     $album  = $album  eq '' ? 'uknown_album'  : $album;
     s/[\\\/:*?"<>|]//g for $artist, $album;
 
-    my $path;
-    if ( defined $track ) {    # track number tag present
-        $path = "$artist/$album/$track $title.mp3";
-    }
-    else {                     # no track number tag
-        $path = "$artist/$album/$title.mp3";
-    }
+    # Set the new path
+    my $path =
+      defined $track
+      ? "$artist/$album/$track $title.mp3"
+      : "$artist/$album/$title.mp3";
 
     if ($Debug) {
         print "$path\n";
-    }
-    else {
-        fmove( $file, $path )
-          or warn "Can't fmove '$file': $!";
+    } else {
+        fmove( $file, $path ) or warn "Can't fmove '$file': $!";
     }
 }
