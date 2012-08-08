@@ -17,9 +17,9 @@ foreach my $file (<*.mp3>) {
 
     # Check/customize tags
     $track = $track =~ /^([0-9]+)/ ? sprintf "%02d", $1 : undef;
-    $title  = $title  eq '' ? 'uknown_title'  : $title;
-    $artist = $artist eq '' ? 'uknown_artist' : $artist;
-    $album  = $album  eq '' ? 'uknown_album'  : $album;
+    $title  = 'unknown_title'    if $title  !~ /\S/;
+    $artist = 'unknown_artist'   if $artist !~ /\S/;
+    $album  = 'unknown_album'    if $album  !~ /\S/;
     s/[\\\/:*?"<>|]//g for $artist, $album;
 
     # Set the new path
