@@ -1,1 +1,1 @@
-Variuos stuff
+Various stuff
