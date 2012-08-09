@@ -7,6 +7,7 @@ use warnings;
 #   find /path/to/mp3_dirs/ -iname '*.mp3' -exec cp "{}" . \;
 use MP3::Tag;
 use File::Copy::Recursive qw(fmove);
+use utf8;
 
 my $Debug = 1;    # 1 - don't move files just print the new path
 
@@ -29,6 +30,7 @@ foreach my $file (<*.mp3>) {
       : "$artist/$album/$title.mp3";
 
     if ($Debug) {
+        binmode STDOUT, ":utf8";
         print "$path\n";
     } else {
         fmove( $file, $path ) or warn "Can't fmove '$file': $!";
