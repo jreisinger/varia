@@ -1,7 +1,7 @@
 Various stuff
 =============
 
-mmoin2md.pl
+moin2md.pl
 -----------
 Convert MoinMoin wiki markup to Markdown markup.
 
