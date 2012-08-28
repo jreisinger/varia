@@ -10,20 +10,20 @@ my %conf;
 
 # Automatic proxy configuration.
 my $html;
-if ( ! system "which curl > /dev/null" ) {  # do we have curl installed?
-  $html = `curl -s $wpad_url`;
+if ( !system "which curl > /dev/null" ) {    # do we have curl installed?
+    $html = `curl -s $wpad_url`;
 } else {
-  $html = "";
+    $html = "";
 }
-$conf{server} = $html =~ /Node\("?([0-9\.]+)"?/ ? $1 : "";
-$conf{port} = $html =~ /HttpPort="?([0-9]{1,5})"?/ ? $1 : "8080";
+$conf{server} = $html =~ /Node\("?([0-9\.]+)"?/      ? $1 : "";
+$conf{port}   = $html =~ /HttpPort="?([0-9]{1,5})"?/ ? $1 : "8080";
 $conf{user} = $ENV{USER} ? $ENV{USER} : "";
 
 # Confirm values with the user
 for (qw( user server port )) {
     print "Enter proxy $_ [defaults to: '$conf{$_}']> ";
     chomp( my $input = <STDIN> );
-    next if $input =~ /^\s*$/; # keep the previous value
+    next if $input =~ /^\s*$/;    # keep the previous value
     $conf{$_} = $input;
 }
 
@@ -35,6 +35,6 @@ system "stty echo";
 print "\n";
 
 # Set proxy and run command(s)
-$ENV{http_proxy} = "http://$conf{user}:$pass\@$conf{server}:$conf{port}";
+$ENV{http_proxy}  = "http://$conf{user}:$pass\@$conf{server}:$conf{port}";
 $ENV{https_proxy} = "http://$conf{user}:$pass\@$conf{server}:$conf{port}";
 exec "@ARGV";
