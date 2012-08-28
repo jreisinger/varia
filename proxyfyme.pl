@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+#################################################
 # Get through proxy that requires authentication.
 use strict;
 use warnings;
@@ -9,11 +10,30 @@ use autodie;
 my $wpad_url  = 'http://wpad/wpad.dat';
 my $conf_file = "$ENV{HOME}/.proxyfyme";
 
-###########
-# Functions
+######
+# Main
+die "Usage: $0 <linux command>\n" unless @ARGV;
+
 my %conf;
 my $pass;
 
+if ( -s $conf_file ) {    # do we have config file?
+    get_conf_from_file();
+} else {
+    get_conf_via_wpad();
+    confirm_conf();
+    store_conf();
+}
+
+get_passwd();
+
+# Set proxy and run command
+$ENV{http_proxy}  = "http://$conf{user}:$pass\@$conf{server}:$conf{port}";
+$ENV{https_proxy} = "http://$conf{user}:$pass\@$conf{server}:$conf{port}";
+exec "@ARGV";
+
+###########
+# Functions
 sub get_conf_via_wpad {
 
     # Automatic proxy configuration using WPAD
@@ -80,22 +100,3 @@ sub get_passwd {
     system "stty echo";
     print "\n";
 }
-
-######
-# Main
-die "Usage: $0 <linux command>\n" unless @ARGV;
-
-if ( -s $conf_file ) {    # do we have config file?
-    get_conf_from_file;
-} else {
-    get_conf_via_wpad;
-    confirm_conf;
-    store_conf;
-}
-
-get_passwd;
-
-# Set proxy and run command(s)
-$ENV{http_proxy}  = "http://$conf{user}:$pass\@$conf{server}:$conf{port}";
-$ENV{https_proxy} = "http://$conf{user}:$pass\@$conf{server}:$conf{port}";
-exec "@ARGV";
