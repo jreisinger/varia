@@ -1,10 +1,10 @@
 #!/usr/bin/perl
-use strict;
-use warnings;
 # Create folder hierarchy based on MP3 tags.
 # Based on: http://www.perlmonks.org/?node_id=985820
 # To get mp3 files from directories
 #   find /path/to/mp3_dirs/ -iname '*.mp3' -exec cp "{}" . \;
+use strict;
+use warnings;
 use MP3::Tag;
 use File::Copy::Recursive qw(fmove);
 use utf8;

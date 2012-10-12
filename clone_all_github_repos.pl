@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# Clone all GitHub repositories.
 use strict;
 use warnings;
 use Net::GitHub;
