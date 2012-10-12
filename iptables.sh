@@ -8,6 +8,12 @@
 #        #!/bin/sh
 #        iptables-restore < /etc/iptables.conf
 #    Set mode: chmod +x /etc/network/if-up.d/iptables
+# Usage 2:
+#    Place a call to this script in your local startup script
+#        /etc/rc.local - Debian, Ubuntu
+#        /etc/rc.d/rc.local - Red Hat, Fedora
+#        /etc/init.d/boot.local - OpenSUSE
+#        /etc/conf.d/local.start - Gentoo
 
 IPT='/sbin/iptables'
 
