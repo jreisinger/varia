@@ -6,10 +6,11 @@ use LWP::Simple qw(get);
 use JSON;
 use Cwd;
 use File::Spec;
+use File::Path qw(remove_tree);
 
 # Where to clone repos (last command line argument)
 my $dest_dir = pop @ARGV;
-usage() unless -d $dest_dir;
+usage() unless defined $dest_dir and -d $dest_dir;
 
 # Github users to backup
 my @usernames = @ARGV;
@@ -19,7 +20,12 @@ usage() unless @usernames > 0;
 for my $username (@usernames) {
 
     print "\n> Working on user '$username'\n";
+
+    # Prepare destination dir
     my $dest_dir = File::Spec->catfile( $dest_dir, $username );
+    if ( -d $dest_dir ) {
+        remove_tree($dest_dir) && print "Removed '$dest_dir'\n";
+    }
     mkdir $dest_dir or die "Can't create '$dest_dir': $!";
 
     for my $repo ( @{ get_repo_info($username) } ) {
@@ -44,7 +50,7 @@ for my $username (@usernames) {
 }
 
 sub usage {
-    die "$0 username1 [ username2 ... usernameN ] existing_dir\n";
+    die "Usage: $0 username1 [ username2 ... usernameN ] existing_dir\n";
 }
 
 sub get_repo_info {
