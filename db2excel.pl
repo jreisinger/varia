@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# Get some data from database and store then to Excel file.
 use strict;
 use warnings;
 use DBI;
