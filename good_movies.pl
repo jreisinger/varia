@@ -5,7 +5,7 @@ use warnings;
 use IMDB::Film;
 
 # User configuration
-my $ids_file    = '/tmp/seen_ids.txt';
+my $ids_file    = 'seen_ids.txt';
 my $movies_file = 'good_movies.txt';
 my $min_rating  = 7;
 my $min_raters  = 1000;
