@@ -1,9 +1,9 @@
 #!/usr/bin/env perl
 # Get your command through proxy that requires authentication.
 # Installation
-#     Place proxyfyme.pl in ~/bin.
-#     Change mode: chmod 755 ~/bin/proxyfyme.pl
-#     Add this to ~/.bashrc: alias proxyfyme="~/bin/proxyfyme.pl"
+#     Place proxyfyme in ~/bin or /usr/local/bin (if you are root)
+#     Change mode: chmod 755 ~/bin/proxyfyme
+#     If ~/bin is not in you PATH, add this to ~/.bashrc: alias proxyfyme="~/bin/proxyfyme"
 # Sample usage:
 #     proxyfyme cpanm Nmap::Parser
 use strict;
