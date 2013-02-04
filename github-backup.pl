@@ -7,6 +7,12 @@ use JSON;
 use Cwd;
 use File::Spec;
 use File::Path qw(remove_tree);
+use Getopt::Long;
+
+# Option to clone a normal repository, not a bare one
+my $nomirror = '';    # create mirror (bare repository) by default
+my $wiki     = '';    # don't clone wikis by default
+usage() unless GetOptions( 'nomirror' => \$nomirror, 'wiki' => \$wiki );
 
 # Where to clone repos (last command line argument)
 my $dest_dir = pop @ARGV;
@@ -40,8 +46,9 @@ for my $username (@usernames) {
         clone_repo( $ssh_url, $dest_dir );
 
         # Wiki
-        if ( $has_wiki eq 'true' ) {
-            (my $wiki_url = $ssh_url) =~ s#\.git$#.wiki.git#;
+        if ( $has_wiki eq 'true' and $wiki ) {
+            ( my $wiki_url = $ssh_url ) =~ s#\.git$#.wiki.git#;
+
             # Returns error if wiki is enabled but is empty
             clone_repo( $wiki_url, $dest_dir );
         }
@@ -50,7 +57,8 @@ for my $username (@usernames) {
 }
 
 sub usage {
-    die "Usage: $0 username1 [ username2 ... usernameN ] existing_dir\n";
+    die
+"Usage: $0 [ --nomirror --wiki ] username1 [ username2 ... usernameN ] existing_dir\n";
 }
 
 sub get_repo_info {
@@ -71,7 +79,10 @@ sub clone_repo {
 
     chdir $dest_dir if getcwd ne $dest_dir;
 
-    if ( system "git clone --quiet --mirror $repo_url" ) {
+    my $git_cmd = "git clone --quiet --mirror $repo_url";
+    $git_cmd = "git clone --quiet $repo_url" if $nomirror;
+
+    if ( system $git_cmd ) {
 
         # Return wasn't zero, meaning failure
         print "'$repo_url' NOT cloned!\n";
