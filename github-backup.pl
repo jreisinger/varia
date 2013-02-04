@@ -66,7 +66,9 @@ sub get_repo_info {
     my $username = shift;
 
     # API v3
-    my $html         = get("https://api.github.com/users/$username/repos");
+    my $url  = "https://api.github.com/users/$username/repos";
+    my $html = get($url);
+    die "Couldn't get data from $url\n" unless defined $html;
     my $decoded_json = decode_json $html;
 
     # One array ref field has info on one repo.
