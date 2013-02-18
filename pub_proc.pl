@@ -8,7 +8,7 @@ use Data::Dumper;
 use utf8;
 
 # Mail related variables
-my $sender = 'root@openhouse.sk';
+my $sender     = 'root@openhouse.sk';
 my @recipients = @ARGV;
 
 die "Usage: $0 rcp\@foo.com [ rcp2\@foo.com .. rcpN\@bar.org ]\n" unless @ARGV;
@@ -40,7 +40,8 @@ for my $entry ( $feed->entries ) {
 # Create mail body
 my $mail;                # mail body
 my @sent_ids;
-my $ids_file = "sent_ids.txt";    # file storing the already sent IDs
+( my $prog_name = $0 ) =~ s/(\.pl)?$//;
+my $ids_file = "${prog_name}_sent_ids.txt";  # file storing the already sent IDs
 for my $id ( sort keys %data ) {
     next if id_sent($id);
     push @sent_ids, $id;
