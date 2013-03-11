@@ -1,5 +1,8 @@
 #!/usr/bin/perl
 # Send information on Slovak public procurement by email.
+# Since they don't work on weekends (of course not! :), 
+# a crontab entry could look like this:
+# 55 02 * * 2-6   /root/scripts/pub_proc.pl foo@bar.com bar@foo.org
 use strict;
 use warnings;
 use XML::Feed;
