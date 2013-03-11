@@ -34,11 +34,15 @@ for my $entry ( $feed->entries ) {
     $lehota = $1 if $xml =~ /FormComponentId="dtDatumaCas1" Value="([^"]+)"/;
     $hodnota = $1 if $xml =~ /FormComponentId="stHodnotaOd11" CssClass="NoBr PDF_beginline" Value="([^"]+)"/;
     #>>>
-    push @{ $data{$id} }, $typ, $predmet, $lehota, $hodnota, $link;
+    push @{ $data{$id} }, $typ, $predmet, $lehota, $hodnota, $link
+      unless $typ =~ /(sledku)|(predbe)/i
+      ;   # I don't care about:
+          #   OZNÁMENIE O VÝSLEDKU VEREJNÉHO OBSTARÁVANIA
+          #   Predbežné oznámenie
 }
 
 # Create mail body
-my $mail;                # mail body
+my $mail;    # mail body
 my @sent_ids;
 ( my $prog_name = $0 ) =~ s/(\.pl)?$//;
 my $ids_file = "${prog_name}_sent_ids.txt";  # file storing the already sent IDs
