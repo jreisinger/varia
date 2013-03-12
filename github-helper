@@ -1,0 +1,89 @@
+#!/usr/bin/perl -w
+###########################################
+# github-helper - Complete github repos
+# 2010, Mike Schilli <m@perlmeister.com>
+# http://www.linux-magazin.de/static/listings/magazin/2010/04/perl/github-helper
+###########################################
+use strict;
+use Pod::Usage;
+use LWP::UserAgent;
+use XML::Simple;
+
+my $netloc = 'git@github.com';
+my $user   = 'mschilli';
+
+if ( !defined $ENV{COMP_LINE} ) {
+    pod2usage("COMP_LINE missing");
+}
+
+my ( $git, $clone, $args ) =
+  split /\s+/, $ENV{COMP_LINE}, 3;
+
+$args = "" unless defined $args;
+
+if ( !defined $clone
+    or $clone ne "clone" )
+{
+
+    # Only 'clone' suggestions
+    exit(0);
+}
+
+if ( $ARGV[2] ne "clone" ) {
+
+    # Do nothing if user doesn't want
+    # to expand the argument after 'clone'
+    exit 0;
+}
+
+# Two pseudo choices to get their
+# common path expanded right away
+if ( !length $args ) {
+    for ( 1 .. 2 ) {
+        print "$netloc/$user/$_\n";
+    }
+    exit 0;
+}
+
+my @repos = remote_repos($user);
+
+for my $repo ( remote_repos($user) ) {
+    my $remote = "$netloc/$user/$repo";
+
+    if ( $args eq substr( $remote, 0, length $args ) ) {
+        print "$remote\n";
+    }
+}
+
+###########################################
+sub remote_repos {
+###########################################
+    my ($user) = @_;
+
+    my @repos = ();
+
+    my $ua   = LWP::UserAgent->new();
+    my $resp = $ua->get("http://github.com/api/v1/xml/$user");
+
+    if ( $resp->is_error ) {
+        die "API fetch failed: ", $resp->message();
+    }
+
+    my $xml = XMLin( $resp->decoded_content() );
+
+    for my $repo ( keys %{ $xml->{repositories}->{repository} } ) {
+        push @repos, $repo;
+    }
+
+    return @repos;
+}
+
+__END__
+
+=head1 NAME
+
+    github-helper - Complete github repos
+
+=head1 SYNOPSIS
+
+    COMP_LINE=... github-helper
