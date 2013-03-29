@@ -3,6 +3,7 @@ varia
 
 Various stuff
 
+* `check-camera-price.pl` - watch cameras' price and send mail on change
 * `clone_all_github_repos.pl` - clone all GitHub repositories
 * `db2excel.pl` - get some data from database and store then to Excel file
 * `gen_ascii_table.pl` - generate simple ASCII table
