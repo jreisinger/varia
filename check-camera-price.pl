@@ -14,7 +14,7 @@ my @cameras = qw(
   panasonic-lumix-dmc-lx5
   panasonic-lumix-dmc-lx7
 );
-my $file     = "last_price.txt";
+my $file     = "last_camera_price.txt";
 my $base_url = 'http://digitalne-fotoaparaty.heureka.sk';
 
 my %price;
