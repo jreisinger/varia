@@ -4,34 +4,85 @@ use strict;
 use warnings;
 use XML::Feed;
 use LWP::Simple;
+use autodie;
 
-my @feeds = qw(
-  http://www.root.cz/rss/clanky/
-  http://www.root.cz/rss/zpravicky/
-  http://www.ibm.com/developerworks/views/linux/rss/libraryview.jsp
-  http://www.modernperlbooks.com/mt/atom.xml
-);
+my $feeds = [    # aref
+    qw(
+      http://www.modernperlbooks.com/mt/atom.xml
+      http://www.root.cz/rss/clanky/
+      http://www.root.cz/rss/zpravicky/
+      http://www.ibm.com/developerworks/views/linux/rss/libraryview.jsp
+      )
+];
+
+my $home      = glob "~";
+my $sent_file = "$home/.$0.sent";    # File keeping the entries already sent
 
 my $recipient = shift;
 die "Usage: $0 foo\@bar.com\n" unless $recipient;
 
-# Get and process feeds.
 my $mail_body;
-for my $feed (@feeds) {
-    $mail_body .= "\n== $feed ==\n";
-    my $string_containing_feed = get($feed);
-    my $feed                   = XML::Feed->parse( \$string_containing_feed );
 
-    binmode STDOUT, ":utf8";
-    foreach ( $feed->entries ) {
-        $mail_body .= "* " . $_->title . " => " . $_->link . "\n";
+for my $feed (@$feeds) {
+    my $entries = get_entries($feed);
+
+    filter_out_old_entries($entries);
+
+    $mail_body .= "\n" . uc $feed . "\n\n";
+    for my $link ( keys %$entries ) {
+        $mail_body .= $entries->{$link} . " ($link)" . "\n";
     }
 
+    store_links_to_file( $sent_file, [ keys %$entries ] );
 }
 
 send_mail($mail_body);
 
+########################
+sub get_entries {
+########################
+    my %entry;
+
+    my $string_containing_feed = get( $_[0] );
+    my $feed                   = XML::Feed->parse( \$string_containing_feed );
+
+    foreach ( $feed->entries ) {
+        $entry{ $_->link } = $_->title;
+    }
+
+    return \%entry;
+}
+
+########################
+sub filter_out_old_entries {
+########################
+    my $entry = shift;    # href
+
+    for my $link ( keys %$entry ) {
+        last unless -f $sent_file;    # no old entries yet
+        open my $fh, "<", $sent_file;
+        chomp( my @sent = <$fh> );
+        if ( grep { $link eq $_ } @sent ) {
+            delete $entry->{$link};
+        }
+        close $fh;
+    }
+}
+
+########################
+sub store_links_to_file {
+########################
+    my $file  = shift;
+    my $links = shift;    # aref
+
+    open my $fh, ">>", $file;    # append new links
+    print $fh "$_\n" for @$links;
+    close $fh;
+}
+
+########################
 sub send_mail {
+########################
     my $mail_body = shift;
 
     my $login = getlogin || getpwuid($<) || "root";
