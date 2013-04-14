@@ -16,7 +16,7 @@ my $feeds = [    # aref
 ];
 
 my $home      = glob "~";
-my $sent_file = "$home/.$0.sent";    # File keeping the entries already sent
+my $sent_file = "$home/.rss_reader.sent";    # File keeping the entries already sent
 
 my $recipient = shift;
 die "Usage: $0 foo\@bar.com\n" unless $recipient;
