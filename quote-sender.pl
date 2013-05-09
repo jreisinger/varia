@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 use open qw(:std :utf8);    # undeclared streams in UTF-8
-use LWP::Simple;
+use LWP::Simple qw(get);
+use Email::MIME;
 
 my @recipients = @ARGV;
 die "Usage: $0 email [ email2, email3, .. emailN ]\n" unless @recipients;
@@ -17,7 +18,6 @@ my $quote = $quotes[ rand @quotes ];
 for my $recipient (@recipients) {
 
     # first, create your message
-    use Email::MIME;
     my $message = Email::MIME->create(
         header_str => [
             From    => sender(),
