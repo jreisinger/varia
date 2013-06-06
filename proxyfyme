@@ -8,7 +8,6 @@
 #     proxyfyme cpanm Nmap::Parser
 use strict;
 use warnings;
-use autodie;
 
 #########################
 # User editable variables
@@ -71,7 +70,7 @@ sub store_conf {
 
     # Store proxy configuration to a file
 
-    open my $fh, ">", $conf_file;
+    open my $fh, ">", $conf_file or die "Can't open $conf_file: $!\n";
     for (qw( user server port )) {
         print $fh "$_ = $conf{$_}\n";
     }
@@ -85,7 +84,7 @@ sub get_conf_from_file {
 
     # Get configuration from file
 
-    open my $fh, "<", $conf_file;
+    open my $fh, "<", $conf_file or die "Can't open $conf_file: $!\n";
     while (<$fh>) {
         chomp;
         for my $param (qw( user server port )) {
