@@ -6,9 +6,11 @@ use Text::ASCIITable;
 use Getopt::Long;
 use autodie;
 
-my $data = "data.csv";    # default input file
+my $data = shift;
+usage() unless $data;
+
 my $title;
-my $orig = 0;             # print original table data
+my $orig = 0;    # print original table data
 
 usage()
   unless GetOptions(
@@ -19,7 +21,12 @@ usage()
 
 sub usage {
     die
-"Usage: $0 --title 'Title of the table' --file <file_with_table_data> --orig";
+"Usage: $0 [ Option(s) ] <table_data.csv>\n" .
+"\n" .
+"Options\n" .
+"\t--title 'Title of the table'\tadd title to the table\n" .
+"\t--orig\t\t\t\tpreserve original table data as HTML comment\n" .
+"\n";
 }
 
 # Field separator for split (PATTERN)
@@ -54,7 +61,7 @@ print $t;
 if ($orig) {
     print "<!-- Original table data:\n";
     for my $line ( sort keys %fields ) {
-        print join( ";", @{ $fields{$line} } ) . "\n";
+        print join( " ; ", @{ $fields{$line} } ) . "\n";
     }
     print "-->\n";
 }
