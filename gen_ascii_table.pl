@@ -20,13 +20,14 @@ usage()
   );
 
 sub usage {
-    die
-"Usage: $0 [ Option(s) ] <table_data.csv>\n" .
-"\n" .
-"Options\n" .
-"\t--title 'Title of the table'\tadd title to the table\n" .
-"\t--orig\t\t\t\tpreserve original table data as HTML comment\n" .
-"\n";
+    print <<EOF;
+Usage: $0 [ Option(s) ] <table_data.csv>
+
+Options:
+    --title 'Title of the table'    add title to the table
+    --orig                          preserve original table data as HTML comment
+EOF
+exit 1;
 }
 
 # Field separator for split (PATTERN)
