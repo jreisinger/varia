@@ -25,8 +25,9 @@ for my $recipient (@recipients) {
             Subject => 'QOTD',
         ],
         attributes => {
-            encoding => 'quoted-printable',
-            charset  => 'UTF-8',
+            encoding     => 'quoted-printable',
+            charset      => 'UTF-8',
+            content_type => 'text/html',          # HTML email
         },
         body_str => "$quote\n",
     );
