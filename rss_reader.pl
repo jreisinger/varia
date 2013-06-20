@@ -21,21 +21,29 @@ my $sent_file = "$home/.rss_reader.sent";    # File keeping the entries already 
 my $recipient = shift;
 die "Usage: $0 foo\@bar.com\n" unless $recipient;
 
+#
+# Create mail body in HTML
+#
 my $mail_body;
-
 for my $feed (@$feeds) {
     my $entries = get_entries($feed);
 
     filter_out_old_entries($entries);
 
-    $mail_body .= "\n" . uc $feed . "\n\n";
+    my ($title) = $feed =~ /http:\/\/(?:www\.)?(\w+\.\w+)\//;
+    $mail_body .= "<a href=$feed>$title</a>";
+    $mail_body .= "<ul>";
     for my $link ( keys %$entries ) {
-        $mail_body .= $entries->{$link} . " ($link)" . "\n";
+        $mail_body .= "<li>" . $entries->{$link} . " (<a href=$link>link</a>)" . "</li>";
     }
+    $mail_body .= "</ul>";
 
     store_links_to_file( $sent_file, [ keys %$entries ] );
 }
 
+#
+# Send email
+#
 send_mail($mail_body);
 
 ########################
@@ -98,9 +106,10 @@ sub send_mail {
             Subject => 'RSS feeds',
         ],
         attributes => {
-            encoding => 'quoted-printable',
-            charset  => 'UTF-8',
-        },
+            encoding     => 'quoted-printable',
+            charset      => 'UTF-8',
+            content_type => 'text/html', # HTML email
+          },
         body_str => $mail_body,
     );
 
