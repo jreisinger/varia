@@ -11,7 +11,10 @@ use Data::Dumper;
 use utf8;
 
 # Mail related variables
-my $sender     = 'root@openhouse.sk';
+my $login = getlogin || getpwuid($<) || "root";
+use Sys::Hostname;
+my $host       = hostname;
+my $sender     = "$login\@$host";
 my @recipients = @ARGV;
 
 die "Usage: $0 rcp\@foo.com [ rcp2\@foo.com .. rcpN\@bar.org ]\n" unless @ARGV;
