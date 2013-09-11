@@ -1,0 +1,102 @@
+#!/usr/bin/perl
+# Vocabulary teacher.
+use strict;
+use warnings;
+
+my $phrase_n = $ARGV[0] // 3;
+
+# Read data into HoH
+my %phrases;    # HoH
+my @phrases;
+{
+    local $/ = "\n\n";
+    chomp( @phrases = <DATA> );
+}
+die "You don't have that much phrases\n" if $phrase_n > @phrases;
+for (@phrases) {
+    next if /^#/;
+    chomp;
+    /<([^>]+)>[^<]+<([^>]+)>/;
+    my $phrase = $_;
+    my ( $foreign, $local ) = ( $1, $2 );
+    $phrase =~ s/<$foreign>/<$local>/;
+    $phrase =~ s/\s+<$local>$//;
+    $phrases{$phrase} = { foreign => $foreign, local => $local };
+}
+
+# Let's got throught some randomly picked phrases
+my $length = 0;
+my $ok     = 0;
+my $hint;
+for ( my $i = 1 ; $i <= $phrase_n ; $i++ ) {
+    for my $phrase ( ( keys %phrases )[ rand keys %phrases ] ) {
+        if ( $phrases{$phrase}{seen} ) {
+            $i--;
+            next;
+        }
+        print $phrase, ' (', $hint // '', ') ', ' > ';
+        chomp( my $input = <STDIN> );
+        $hint = eval_word( $phrases{$phrase}{local},
+            $phrases{$phrase}{foreign}, $input );
+        if ( $hint eq 'ok' ) {
+            print "\nThat's it!\n\n";
+            $ok++;
+            $phrases{$phrase}{seen} = 1;
+            $hint = '';
+        } elsif ( $hint eq 'no' ) {
+            print "\nIt's '" . $phrases{$phrase}{foreign} . "'\n\n";
+            $hint = '';
+        } else {
+            redo;
+        }
+    }
+}
+
+# Did we input a correct word?
+sub eval_word {
+    my ( $local, $foreign, $input ) = @_;
+    if ( $input eq $foreign ) {
+        $length = 0;
+        return 'ok';
+    } elsif ( length($foreign) == $length ) {
+        $length = 0;
+        return 'no';
+    } else {
+        return
+          substr( $foreign, 0, $length++ )
+          . '.' x ( length($foreign) - $length + 1 );
+    }
+}
+
+print "You got right $ok out of $phrase_n\n";
+
+__DATA__
+# Some <nice> phrase. <nice-in-your-local-language>
+
+I remember reading at some point that you are a Christian, and there have been
+suggestions that some of your early missionary impulses (a desire to do good,
+help others) are perhaps part of the <zeal> you have put into Perl over the
+years. <nadšenie, horlivosť>
+
+A lot of people <have a vested interest in> making this a lot tougher to
+swallow than it needs to be, but it's supposed to be simple enough that a child
+can understand it. <majú osobitý záujem na>
+
+I doesn't take great energetic <gobs> of faith on your part--after all, Jesus
+said you only have to have faith the size of a mustard seed. <kúsky, hrudky>
+
+People are almost afraid to observe the B qubit becasuse they don't want the
+wave function to collapse either to a 0 or a 1, since both choices are deemed
+<unpalatable>. <ťažko prijateľné, stráviteľné>
+
+Once you see the universe from that point of view, many arguments fade into
+unimportance, such as Hawking's argument that the universe <fuzzed> into
+existence at the beginning, and therefore there was no creator. <rozmazať sa>
+
+If God is creating the universe <sideways> like an Author, ... <zboku>
+
+All human institutions are <fallible>, ... <omilné>
+
+That <ties in with> my linguistic notions that things ought to be defined by
+prototype [model, typický príklad] rather than by formul [vzorec, schéma].
+<spájať, súvisieť s>
