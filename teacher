@@ -30,6 +30,7 @@ my $ok     = 0;
 my $hint;
 for ( my $i = 1 ; $i <= $phrase_n ; $i++ ) {
     for my $phrase ( ( keys %phrases )[ rand keys %phrases ] ) {
+
         # Dont' repeat the phrases
         if ( $phrases{$phrase}{seen} ) {
             $i--;
@@ -96,3 +97,6 @@ All human institutions are <fallible>, ... <omylné>
 That <ties in with> my linguistic notions that things ought to be defined by
 prototype [model, typický príklad] rather than by formula [vzorec, schéma].
 <spájať, súvisieť s>
+
+<scratchpad> <A pad of paper for preliminary or hasty writing, notes, or
+sketches>
