@@ -23,5 +23,5 @@ my @repos = $github->repos->list;
 #print Dumper \@repos;
 
 for my $repo (@repos) {
-    system "git clone $repo->{ssh_url}";
+    system "git clone $repo->{clone_url}";
 }
