@@ -9,6 +9,7 @@ use autodie;
 my $feeds = [    # aref
     qw(
       http://www.modernperlbooks.com/mt/atom.xml
+      http://perltv.org/daily.atom
       http://www.root.cz/rss/clanky/
       http://www.root.cz/rss/zpravicky/
       http://www.ibm.com/developerworks/views/linux/rss/libraryview.jsp
