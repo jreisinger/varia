@@ -7,6 +7,6 @@ find -type f -iname "*.srt" -print0 | while read -d $'\0' file; do mv "$file" .;
 find -type f -print0 | while read -d $'\0' file; do mv "$file" $(echo $file | perl -nE 'print "$1.$2" if /(S\d\dE\d\d).*\.(\w\w\w)$/'); done
 
 # Merge subtitles to mkv file
-find -type f | while read file; do base=$(echo $file|perl -pe 's/\....$//'); mkvmerge -o ${base}_sub.mkv --compression -1:none $base.mkv $base.srt; done
+find -type f -iname "*.mkv" | while read file; do base=$(echo $file|perl -pe 's/\....$//'); mkvmerge -o ${base}_sub.mkv --compression -1:none $base.mkv $base.srt; done
 
 # See also https://gist.github.com/jreisinger/5071103
