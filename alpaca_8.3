@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+# My version of the exercise 8.3 from Intermediate Perl, 2nd.
+use strict;
+use warnings;
+use v5.10;
+use autodie;
+
+for my $dir (@ARGV) {
+    unless ( -d $dir ) {
+        warn "skipping non directory: $dir\n";
+        next;
+    }
+    opendir( my $dh, $dir );
+    say $dir;
+    print_dir_content($dh);
+}
+
+sub print_dir_content {
+    my $dh = shift;
+
+    while ( my $file = readdir $dh ) {
+        next if ( $file eq '.' or $file eq '..' );
+        say '    ', $file;
+    }
+}
