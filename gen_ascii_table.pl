@@ -21,13 +21,13 @@ usage()
 
 sub usage {
     print <<EOF;
-Usage: $0 [ Option(s) ] <table_data.csv>
+Usage: $0 [ Option(s) ] <table_data_with_semicolons.csv>
 
 Options:
     --title 'Title of the table'    add title to the table
     --orig                          preserve original table data as HTML comment
 EOF
-exit 1;
+    exit 1;
 }
 
 # Field separator for split (PATTERN)
@@ -35,7 +35,7 @@ exit 1;
 my $fs = qr(\s*;\s*);    # ;
 
 my %fields;              # Hasf of arrays (HoA)
-my $line;
+my $line = 0;
 
 # Process and store input data
 open my ($fh), $data;
@@ -49,7 +49,7 @@ for (<$fh>) {
 
 # Print ASCII table
 my $t = Text::ASCIITable->new( { headingText => $title } );
-for my $line ( sort keys %fields ) {
+for my $line ( sort { $a <=> $b } keys %fields ) {
     if ( $line == 0 ) {
         $t->setCols( @{ $fields{$line} } );
     } else {
