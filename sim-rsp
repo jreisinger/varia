@@ -1,0 +1,127 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use 5.010;
+no warnings 'experimental::smartmatch';
+use Getopt::Long;
+use Pod::Usage;
+use Time::HiRes qw( sleep );
+
+#################
+# Configuration #
+#################
+
+# Command line options
+my $help  = 0;
+my $man   = 0;
+my $name1 = 'Player 1';
+my $name2 = 'Player 2';
+my $sleep = 2;
+my $plays = 5;
+GetOptions(
+    "help|h|?"  => \$help,
+    man         => \$man,
+    "player1=s" => \$name1,
+    "player2=s" => \$name2,
+    "sleep=s"   => \$sleep,
+    "plays=i"   => \$plays,
+) or pod2usage(2);
+
+# Help
+pod2usage(1) if $help;
+pod2usage( -exitval => 0, -verbose => 2, -noperldoc => 1 ) if $man;
+
+########
+# Main #
+########
+
+my @options = ( \&rock, \&scissors, \&paper );
+
+my %wins = ( $name1 => 0, $name2 => 0, none => 0 );
+my $count = 1;
+
+do {
+    my $player1 = $options[ rand @options ];
+    my $player2 = $options[ rand @options ];
+    $player2->( $name2, $player1->($name1) );
+    sleep $sleep;
+    $count++;
+} while $count <= $plays;
+
+say "-" x 80;
+
+my $wins2 = $wins{$name2};
+my $ties  = $wins{none};
+my $wins1 = $plays - $wins2 - $ties;
+
+say "Plays: $plays";
+say "$name1 wins: $wins1", " (", $wins1 / $plays * 100, "%)";
+say "$name2 wins: $wins2", " (", $wins2 / $plays * 100, "%)";
+say "Ties: $wins{none}",   " (", $ties / $plays * 100,  "%)";
+
+#############
+# Functions #
+#############
+
+sub rock {
+    my $who = shift;
+    print "$who plays rock. ";
+    return 'rock' unless @_;
+
+    for (shift) {
+        when (/paper/)    { say "$who loses." }
+        when (/rock/)     { say "Tie."; $wins{none}++ }
+        when (/scissors/) { say "$who wins."; $wins{$who}++ }
+        default           { say "???" }
+    }
+}
+
+sub scissors {
+    my $who = shift;
+    print "$who plays scissors. ";
+    return 'scissors' unless @_;
+
+    for (shift) {
+        when (/rock/)     { say "$who loses." }
+        when (/scissors/) { say "Tie."; $wins{none}++ }
+        when (/paper/)    { say "$who wins."; $wins{$who}++ }
+        default           { say "???" }
+    }
+}
+
+sub paper {
+    my $who = shift;
+    print "$who plays paper. ";
+    return 'paper' unless @_;
+
+    for (shift) {
+        when (/scissors/) { say "$who loses." }
+        when (/paper/)    { say "Tie."; $wins{none}++ }
+        when (/rock/)     { say "$who wins."; $wins{$who}++ }
+        default           { say "???" }
+    }
+}
+
+__END__
+
+=head1 NAME
+
+sim-rsp - simulate rock, scissors, paper games
+
+=head1 SYNOPSIS
+
+sim-rsp [options]
+
+  Options:
+    --help          brief help message
+    --man           full documentation
+    --player1 NAME  name of player 1
+    --player2 NAME  name of player 2
+    --sleep SEC     seconds to wait between plays (default: 2)
+    --plays INT     number of plays (default: 5)
+
+=head1 EXAMPLES
+
+sim-rsp --player1 Larry --player2 Guido --sleep 0.001 --plays 1000
+
+=cut
