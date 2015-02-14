@@ -55,8 +55,8 @@ my $ties  = $wins{none};
 my $wins1 = $plays - $wins2 - $ties;
 
 say "Plays: $plays";
-say "$name1 wins: $wins1", " (", $wins1 / $plays * 100, "%)";
-say "$name2 wins: $wins2", " (", $wins2 / $plays * 100, "%)";
+say "${name1}'s wins: $wins1", " (", $wins1 / $plays * 100, "%)";
+say "${name2}'s wins: $wins2", " (", $wins2 / $plays * 100, "%)";
 say "Ties: $wins{none}",   " (", $ties / $plays * 100,  "%)";
 
 #############
@@ -119,6 +119,10 @@ sim-rsp [options]
     --player2 NAME  name of player 2
     --sleep SEC     seconds to wait between plays (default: 2)
     --plays INT     number of plays (default: 5)
+
+=head1 DESCRIPTION
+
+Stolen from Chromatic's Modern Perl book.
 
 =head1 EXAMPLES
 
