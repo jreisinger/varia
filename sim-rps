@@ -106,11 +106,11 @@ __END__
 
 =head1 NAME
 
-sim-rsp - simulate rock, scissors, paper games
+sim-rps - simulate rock-paper-scissors zero sum hand game
 
 =head1 SYNOPSIS
 
-sim-rsp [options]
+sim-rps [options]
 
   Options:
     --help          brief help message
@@ -126,6 +126,6 @@ Stolen from Chromatic's Modern Perl book.
 
 =head1 EXAMPLES
 
-sim-rsp --player1 Larry --player2 Guido --sleep 0.001 --plays 1000
+sim-rps --player1 Larry --player2 Guido --sleep 0.001 --plays 1000
 
 =cut
