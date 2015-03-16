@@ -80,6 +80,7 @@ for my $item ( sort { $a->{price} cmp $b->{price} } @items ) {
 }
 
 if ($body) {
+    $last_price //= 'n/a';
     send_mail( $_, "Plienky zlacneli $last_price => $price", $body )
       for @emails;
 }
