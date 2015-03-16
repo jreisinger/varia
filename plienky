@@ -1,0 +1,94 @@
+#!/usr/bin/env perl
+# Check whether Tesco diapers got any cheaper.
+use strict;
+use warnings;
+no warnings qw(numeric);
+use v5.10;
+use autodie;
+use Mojo::UserAgent;
+use Data::Dumper;
+use FindBin qw($Bin);
+use File::Basename;
+
+my $email = shift or die "Usage: $0 <email address>\n";
+
+my $ua = Mojo::UserAgent->new;
+
+# Diapers IDs
+my @ids = qw(
+  2002016460814
+  2002120607270
+  2002016460777
+  2002120607287
+  2002016460784
+);
+
+binmode STDOUT, ":encoding(UTF-8)";
+
+my @items;
+
+for my $id (@ids) {
+    my $url =
+      "http://potravinydomov.itesco.sk/sk-SK/ProductDetail/ProductDetail/$id";
+    my $dom = $ua->get( $url => { Accept => '*/*' } )->res->dom;
+
+    my $title;
+    my $price;
+
+    for my $e ( $dom->find('title')->each ) {
+        my $text = $e->text;
+        $text =~ s/^\s*//;
+        $text =~ s/\r//;                     # carriage return
+        $text =~ s/ - Potraviny - Tesco//;
+        chomp $text;
+        $title = $text;
+    }
+
+    for my $e ( $dom->find('span[class="linePriceAbbr"]')->each ) {
+        my $text = $e->text;
+        $text =~ s/[()]//g;
+        $text =~ s/,/./;
+        $price = $text;
+    }
+
+    push @items, { price => $price, title => $title, url => $url };
+}
+
+# Get last lowest price
+my $file        = "$Bin/." . basename $0;
+my $last_lowest = .2;                       # defaul lowest unit price
+if ( -f $file ) {
+    open my $fh, '<', $file;
+    $last_lowest = <$fh>;
+    close $fh;
+}
+
+my $body;
+for my $item ( sort { $a->{price} cmp $b->{price} } @items ) {
+    if ( $item->{price} < $last_lowest ) {
+        $body = "$item->{title} - $item->{price} ($item->{url})\n";
+
+        my $price = $item->{price};
+        $price =~ s/ .*$//;
+        open my $fh, '>', $file;
+        print $fh $price;
+        close $fh;
+    }
+    last;
+}
+
+send_mail( $email, 'Plienky', $body ) if $body;
+
+sub send_mail {
+    my $recipient = shift;
+    my $subject   = shift;
+    my $body      = shift;
+
+    my $mailexe = '/usr/bin/mail';
+
+    open my $MAIL, "|$mailexe -s '$subject' '$recipient'"
+      or die "Can't send mail: $!\n";
+
+    binmode $MAIL, ":encoding(UTF-8)";
+    print $MAIL $body;
+}
