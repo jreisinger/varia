@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# Check whether Tesco diapers got any cheaper.
+# Check whether Tesco diapers got any cheaper or are cheaper then $min_price.
 use strict;
 use warnings;
 no warnings qw(numeric);
@@ -11,6 +11,8 @@ use FindBin qw($Bin);
 use File::Basename;
 
 my @emails = @ARGV or die "Usage: $0 <email address> [<email address 2> ...]\n";
+
+my $min_price = .20;    # Eur/piece
 
 # Diapers IDs we check
 my @ids = qw(
@@ -66,7 +68,7 @@ my $price;
 for my $item ( sort { $a->{price} cmp $b->{price} } @items ) {
     if ( not $last_price ) {    # first run
         $body = "$item->{title} - $item->{price} ($item->{url})\n";
-    } elsif ( $item->{price} < $last_price ) {
+    } elsif ( $item->{price} < $last_price or $item->{price} < $min_price ) {
         $body = "$item->{title} - $item->{price} ($item->{url})\n";
     }
 
@@ -81,8 +83,11 @@ for my $item ( sort { $a->{price} cmp $b->{price} } @items ) {
 
 if ($body) {
     $last_price //= 'n/a';
-    send_mail( $_, "Plienky zlacneli $last_price => $price", $body )
-      for @emails;
+    send_mail(
+        $_,
+        "Plienky su lacne ($price < $min_price) alebo zlacneli ($last_price -> $price)",
+        $body
+    ) for @emails;
 }
 
 sub send_mail {
