@@ -1,0 +1,77 @@
+#!/usr/bin/env perl
+use 5.014;
+use warnings;
+use autodie;
+use charnames ':full';
+use List::Util 'shuffle';
+use Getopt::Long;
+use Pod::Usage;
+
+GetOptions(
+    "h|?|help"  => \( my $help ),
+    "hands=i"   => \( my $hands ),
+    "cards=i"   => \( my $cards ),
+) or pod2usage(1);
+
+pod2usage( -exitval => 0, -verbose => 2, -noperldoc => 1 ) if $help;
+
+sub deck {
+    my $n_cards = 52;
+
+    my @suit = (
+        "\N{BLACK HEART SUIT}",
+        "\N{BLACK SPADE SUIT}",
+        "\N{BLACK DIAMOND SUIT}",
+        "\N{BLACK CLUB SUIT}",
+    );
+    my @rank = ((2 .. 10), qw(J Q K A));
+
+    my @deck;
+    my $i = 0;
+    while (@deck < $n_cards) {
+        for my $s (@suit) {
+            for my $r (@rank) {
+                $deck[$i++] = "$r$s";
+            }
+        }
+    }
+
+    return \@deck;
+}
+
+sub deal {
+    my $deck    = shift;
+    my $n_cards = shift // 5;
+    my $hands   = shift // 1;
+
+    my @shuffled = shuffle(@$deck);
+
+    binmode STDOUT, ':utf8';
+    for (1 .. $hands) {
+        my @hand;
+        for (1 .. $n_cards) {
+            die "no more cards in deck ...\n" unless @shuffled;
+            push @hand, shift @shuffled;
+        }
+        say(join " ", @hand);
+    }
+}
+
+deal(deck(), $cards, $hands);
+
+__END__
+
+=head1 NAME
+
+cards - deal cards from deck of 52 cards
+
+=head1 SYNOPSIS
+
+cards [options]
+
+  options:
+    -h, -?, --help  brief help message
+    --hands N       number of hands to deal [1]
+    --cards N       cards per hand [5]
+
+=cut
