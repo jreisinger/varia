@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+use 5.014;
+use warnings;
+use Deck;
+use Getopt::Long;
+use Pod::Usage;
+
+GetOptions(
+    "h|?|help"  => \( my $help ),
+    "hands=i"   => \( my $hands ),
+    "cards=i"   => \( my $cards ),
+) or pod2usage(1);
+
+pod2usage( -exitval => 0, -verbose => 2, -noperldoc => 1 ) if $help;
+
+my $deck = Deck->new();
+$deck->shuffle();
+$deck->deal({cards => $cards, hands => $hands});
+
+__END__
+
+=head1 NAME
+
+ocards - deal cards from deck of 52 cards (OOP version of cards)
+
+=head1 SYNOPSIS
+
+ocards [options]
+
+  options:
+    -h, -?, --help  brief help message
+    --hands N       number of hands to deal [1]
+    --cards N       cards per hand [5]
+
+=cut
