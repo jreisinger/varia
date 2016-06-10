@@ -7,8 +7,11 @@ use LWP::Simple qw(get);
 use JSON;
 use Cwd;
 use File::Spec;
-use File::Path qw(remove_tree);
+use File::Copy qw(move);
+use File::Path qw(rmtree);
+use POSIX qw(strftime);
 use Getopt::Long;
+use autodie;
 
 # Option to clone a normal repository, not a bare one
 my $nomirror = '';    # create mirror (bare repository) by default
@@ -31,8 +34,10 @@ for my $username (@usernames) {
 
     # Prepare destination dir
     my $dest_dir = File::Spec->catfile( $dest_dir, $username );
+    my $time = strftime "%F_%T", localtime $^T;
+    my $backup_dir = "$dest_dir.$time";
     if ( -d $dest_dir ) {
-        remove_tree($dest_dir) && print "Removed '$dest_dir'\n";
+        move($dest_dir, $backup_dir);
     }
     mkdir $dest_dir or die "Can't create '$dest_dir': $!";
 
@@ -56,7 +61,11 @@ for my $username (@usernames) {
         }
     }
 
-    die "\nSome repos ($FAILED of them) were not cloned\n" if $FAILED;
+    if ($FAILED) {
+        die "\nSome repos ($FAILED of them) were not cloned, backup it at $backup_dir\n";
+    } else {
+        rmtree($backup_dir);
+    }
 }
 
 sub usage {
