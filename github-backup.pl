@@ -1,5 +1,6 @@
 #!/usr/bin/perl
 # Copy bare GitHub repositories to local machine (including wikis).
+# Source: https://github.com/jreisinger/varia/blob/master/github-backup.pl
 use strict;
 use warnings;
 use LWP::Simple qw(get);
