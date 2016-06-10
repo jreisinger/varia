@@ -62,7 +62,8 @@ for my $username (@usernames) {
     }
 
     if ($FAILED) {
-        die "\nSome repos ($FAILED of them) were not cloned, backup it at $backup_dir\n";
+        warn "\nSome repos ($FAILED of them) of $username were not cloned,
+        backup it at $backup_dir\n";
     } else {
         rmtree($backup_dir);
     }
