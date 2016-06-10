@@ -61,7 +61,7 @@ for my $username (@usernames) {
 
 sub usage {
     die
-"Usage: $0 [ --nomirror --wiki ] username1 [ username2 ... usernameN ] existing_dir\n";
+      "Usage: $0 [ --nomirror --wiki ] username1 [ username2 ... usernameN ] existing_dir\n";
 }
 
 sub get_repo_info {
@@ -90,7 +90,7 @@ sub clone_repo {
     if ( system $git_cmd ) {
 
         # Return wasn't zero, meaning failure
-	$FAILED++;
+        $FAILED++;
         warn "'$repo_url' NOT cloned!\n";
     } else {
         print "'$repo_url' cloned to $dest_dir.\n";
