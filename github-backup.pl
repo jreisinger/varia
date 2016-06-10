@@ -24,6 +24,7 @@ my @usernames = @ARGV;
 usage() unless @usernames > 0;
 
 # Get all repos for the username
+my $FAILED;
 for my $username (@usernames) {
 
     print "\n> Working on user '$username'\n";
@@ -55,6 +56,7 @@ for my $username (@usernames) {
         }
     }
 
+    die "\nSome repos ($FAILED of them) were not cloned\n" if $FAILED;
 }
 
 sub usage {
@@ -88,8 +90,10 @@ sub clone_repo {
     if ( system $git_cmd ) {
 
         # Return wasn't zero, meaning failure
-        print "'$repo_url' NOT cloned!\n";
+	$FAILED++;
+        warn "'$repo_url' NOT cloned!\n";
     } else {
         print "'$repo_url' cloned to $dest_dir.\n";
     }
 }
+
