@@ -47,7 +47,7 @@ sub deal {
     my $deck    = shift;
     my $args    = shift;
     my $n_cards = $args->{cards} // 5;
-    my $hands   = $args->{cards} // 1;
+    my $hands   = $args->{hands} // 1;
 
     for (1 .. $hands) {
         my @hand;
