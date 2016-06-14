@@ -23,13 +23,22 @@ class Deck:
     def shuffle(self):
         random.shuffle(self.deck)
 
-    def deal(self, n_cards = 5, hands = 1):
+    def deal_old(self, n_cards = 5, hands = 1):
         for i in range(hands):
             hand = []
             while len(hand) < n_cards:
                 hand.append(self.deck.pop())
             print()
             for card in hand:
+                print(card)
+
+    def _deal_one_hand(self, n_cards = 5):
+        return [self.deck[x] for x in range(min(len(self.deck)), n_cards)]
+
+    def deal(self, n_cards = 5, hands = 1):
+        for i in range(hands):
+            print()
+            for card in Deck._deal_one_hand(n_cards):
                 print(card)
 
 if __name__ == '__main__':
