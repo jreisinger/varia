@@ -16,33 +16,16 @@ class Deck:
                     self.deck.append(Deck.rank_names[rank] + Deck.suit_names[suit])
             self.deck.append
 
-    def show(self):
-        for card in self.deck:
-            print(card)
-
     def shuffle(self):
         random.shuffle(self.deck)
 
-    def deal_old(self, n_cards = 5, hands = 1):
-        for i in range(hands):
-            hand = []
-            while len(hand) < n_cards:
-                hand.append(self.deck.pop())
-            print()
-            for card in hand:
-                print(card)
-
-    def _deal_one_hand(self, n_cards = 5):
-        return [self.deck[x] for x in range(min(len(self.deck)), n_cards)]
-
-    def deal(self, n_cards = 5, hands = 1):
-        for i in range(hands):
-            print()
-            for card in Deck._deal_one_hand(n_cards):
-                print(card)
+    def deal_one_hand(self, n_cards = 5):
+        hand = []
+        for x in range(min(len(self.deck), n_cards)):
+            hand.append(self.deck.pop()) 
+        return hand
 
 if __name__ == '__main__':
-
 
     parser = argparse.ArgumentParser(description="Deal card from deck of 52 cards")
     parser.add_argument('--hands', type=int, help='number of hands to deal [1]', default = 1)
@@ -54,4 +37,5 @@ if __name__ == '__main__':
 
     deck = Deck()
     deck.shuffle()
-    deck.deal(n_cards = cards, hands = hands)
+    for hand in range(hands):
+        print(deck.deal_one_hand(cards))
