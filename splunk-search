@@ -1,0 +1,15 @@
+#!/usr/bin/perl -s
+# Usage: splunk-search -k=src -o=OR
+
+$values = do { local $/; <> };
+@values = split ' ', $values;
+
+for $value (@values) {
+        $expr = qq($k=$value);
+        push @expressions, $expr;
+        $count++;
+}
+
+print "Processed $count values\n";
+print join " $o ", @expressions;
+print "\n";
