@@ -1,15 +1,36 @@
-#!/usr/bin/perl -s
-# Usage: splunk-search -k=src -o=OR
+#!/usr/bin/perl -sw
+use vars qw($h $f $o);
+
+if ($h) {
+        print <<EOF;
+Create (part of) Splunk search command to be pasted into web search bar.
+
+  $0 -f=FIELD -o=OPERATOR
+
+    -f=FIELD    field name (ex. host, sourceype)
+    -o=OP       operator (AND, OR)
+
+Examples
+
+  echo host1 host2 host3 | $0 -f=host -o=OR
+
+  $0 -f=src -o=OR subnets_copied_from_excel.txt
+
+EOF
+        exit;
+}
 
 $values = do { local $/; <> };
+die "Missing input, exiting ...\n" unless $values;
 @values = split ' ', $values;
 
 for $value (@values) {
-        $expr = qq($k=$value);
+        $expr = qq($f=$value);
         push @expressions, $expr;
         $count++;
 }
 
-print "Processed $count values\n";
+print "Processed $count values";
+print "\n", "-" x 80, "\n";
 print join " $o ", @expressions;
-print "\n";
+print "\n", "-" x 80, "\n";
