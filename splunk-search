@@ -5,20 +5,12 @@ if ($h) {
         print <<EOF;
 Create (part of) Splunk search command to be pasted into web search bar.
 
-Input can come from STDIN or a file. Items (fields) in the input are white
-space separated.
-
   $0 -f=FIELD -o=OPERATOR
-
-    -f=FIELD    field name (ex. host, sourceype)
-    -o=OP       operator (AND, OR)
 
 EXAMPLES
 
   echo host1 host2 host3 | $0 -f=host -o=OR
-
   $0 -f=src -o=OR subnets_copied_from_excel.txt
-
 EOF
         exit;
 }
