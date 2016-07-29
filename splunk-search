@@ -25,7 +25,6 @@ for $value (@values) {
         $count++;
 }
 
+$sep = "\n" . "-" x 80 . "\n";
 print "Processed $count values";
-print "\n", "-" x 80, "\n";
-print join " $o ", @expressions;
-print "\n", "-" x 80, "\n";
+print $sep, join(" $o ", @expressions), $sep;
