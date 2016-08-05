@@ -1,0 +1,32 @@
+#!/usr/bin/perl -ws
+use strict;
+use vars qw($iops $disk $logs $queries);
+
+$iops //= qx(iostat -d $disk | grep $disk | perl -lane 'print \$F[2]');
+
+usage() unless $iops && $logs && $queries;
+
+my $gigs_of_logs_per_day = $logs;
+my $avg_concurrent_queries = $queries;
+
+my $indexers_needed =
+        $iops / 800 *
+        $gigs_of_logs_per_day / 100 *
+        $avg_concurrent_queries / 4
+;
+
+printf "You need cca. %.0f indexers\n", $indexers_needed;
+
+sub usage {
+        print <<EOF;
+Usage
+
+        $0 -iops=<your iops>|-disk=<local disk> -logs=<gigs_of_logs_per_day> -queries=<avg_concurrent_queries>
+
+Examples
+
+        $0 -disk=dm-2 -logs=1000 -queries=4
+        $0 -iops=1200 -logs=1000 -queries=4
+EOF
+        exit;
+}
