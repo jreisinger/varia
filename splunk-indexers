@@ -19,6 +19,10 @@ printf "You need cca. %.0f indexers\n", $indexers_needed;
 
 sub usage {
         print <<EOF;
+About
+
+        Calculate the number of Splunk indexers needed.  The calculation is based on some assumptions about disks, logs and searches - see the code.
+        
 Usage
 
         $0 -iops=<your iops>|-disk=<local disk> -logs=<gigs_of_logs_per_day> -queries=<avg_concurrent_queries>
