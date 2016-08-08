@@ -2,9 +2,11 @@
 use strict;
 use vars qw($iops $disk $logs $queries);
 
+usage() unless $iops || $disk;
+
 $iops //= qx(iostat -d $disk | grep $disk | perl -lane 'print \$F[2]');
 
-usage() unless $iops && $logs && $queries;
+usage() unless $logs && $queries;
 
 my $gigs_of_logs_per_day = $logs;
 my $avg_concurrent_queries = $queries;
@@ -19,18 +21,20 @@ printf "You need cca. %.0f indexers\n", $indexers_needed;
 
 sub usage {
         print <<EOF;
-About
+ABOUT
 
-        Calculate the number of Splunk indexers needed.  The calculation is based on some assumptions about disks, logs and searches - see the code.
-        
-Usage
+Calculate the number of Splunk indexers needed. The calculation is based on
+some assumptions about disks, logs and searches - see the code.
 
-        $0 -iops=<your iops>|-disk=<local disk> -logs=<gigs_of_logs_per_day> -queries=<avg_concurrent_queries>
+USAGE
 
-Examples
+$0 -iops=<your iops>|-disk=<local disk> -logs=<gigs_of_logs_per_day>
+-queries=<avg_concurrent_queries>
 
-        $0 -disk=dm-2 -logs=1000 -queries=4
-        $0 -iops=1200 -logs=1000 -queries=4
+EXAMPLES
+
+$0 -disk=dm-2 -logs=1000 -queries=4
+$0 -iops=1200 -logs=1000 -queries=4
 EOF
         exit;
 }
