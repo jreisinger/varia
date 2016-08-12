@@ -20,6 +20,7 @@ die "Missing input, exiting ...\n" unless $values;
 @values = split ' ', $values;
 
 for $value (@values) {
+        $value .= '*' unless $value =~ /^[\d\.]+$/;
         $expr = qq($f=$value);
         push @expressions, $expr;
         $count++;
