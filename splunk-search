@@ -5,7 +5,7 @@ if ($h) {
         print <<EOF;
 Create (part of) Splunk search command to be pasted into web search bar.
 
-  $0 -f=FIELD -o=OPERATOR
+  $0 [-f=FIELD] -o=OPERATOR
 
 EXAMPLES
 
@@ -21,7 +21,11 @@ die "Missing input, exiting ...\n" unless $values;
 
 for $value (@values) {
         $value .= '*' unless $value =~ /^[\d\.]+$/;
-        $expr = qq($f=$value);
+        if ($f) {
+                $expr = qq($f=$value);
+        } else {
+                $expr = qq($value);
+        }
         push @expressions, $expr;
         $count++;
 }
@@ -29,4 +33,3 @@ for $value (@values) {
 $sep = "\n" . "-" x 80 . "\n";
 print "Processed $count values";
 print $sep, '(', join(" $o ", @expressions), ')', $sep;
-
