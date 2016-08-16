@@ -11,6 +11,7 @@ usage() unless $logs && $queries;
 my $gigs_of_logs_per_day = $logs;
 my $avg_concurrent_queries = $queries;
 
+# FIXME: calculation needs to be reviewed (more IOPS mean more indexers???)
 my $indexers_needed =
         $iops / 800 *
         $gigs_of_logs_per_day / 100 *
