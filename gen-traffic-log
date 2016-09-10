@@ -1,4 +1,5 @@
 #!/usr/bin/perl
+# https://www.intermediateperl.com/downloads/5.References.And.Scoping/make_coconet_dat.pl
 use strict;
 use warnings;
 use v5.10;
@@ -19,6 +20,6 @@ my @hosts = map {
 
 for ( 1 .. $records ) {
     my ( $src, $dst ) = map { @hosts[ rand(@hosts) ] } 1 .. 2;
-    my $traffic = int rand 10_000;
-    say join "\t", $src, $dst, $traffic;
+    my $bytes = int rand 10_000;
+    say join "\t", $src, $dst, $bytes;
 }
