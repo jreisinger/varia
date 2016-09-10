@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use v5.10;
+
+my $records = shift // 10;
+
+my @networks = (
+    [qw(example.org host1 host2 host3)],
+    [qw(example.net hostA hostB)],
+    [qw(example.com host)],
+);
+
+my @hosts = map {
+    my ( $domain, @hosts ) = @$_;
+
+    map { "$_.$domain" } @hosts;
+} @networks;
+
+for ( 1 .. $records ) {
+    my ( $src, $dst ) = map { @hosts[ rand(@hosts) ] } 1 .. 2;
+    my $traffic = int rand 10_000;
+    say join "\t", $src, $dst, $traffic;
+}
