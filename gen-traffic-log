@@ -20,6 +20,7 @@ my @hosts = map {
 
 for ( 1 .. $records ) {
     my ( $src, $dst ) = map { @hosts[ rand(@hosts) ] } 1 .. 2;
+    redo if $src eq $dst;  # we don't use net to communicate to ourselves
     my $bytes = int rand 10_000;
     say join "\t", $src, $dst, $bytes;
 }
