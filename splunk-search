@@ -3,17 +3,24 @@ use vars qw($h $f $o);
 
 if ($h) {
         print <<EOF;
-Create (part of) Splunk search command to be pasted into web search bar.
+NAME
 
-  $0 [-f=FIELD] -o=OPERATOR
+  splunk-search - create (part of) Splunk search command to be pasted into web search bar
+
+SYNOPSIS
+
+  splunk-search -o=OPERATOR [-f=FIELD] [FILE(S)]
 
 EXAMPLES
 
-  echo host1 host2 host3 | $0 -f=host -o=OR
-  $0 -f=src -o=OR subnets_copied_from_excel.txt
+  echo host1 host2 host3 | splunk-search -f=host -o=OR
+
+  splunk-search -f=src -o=OR subnets_copied_from_excel.txt
 EOF
         exit;
 }
+
+die "Missing -o switch. Use -h to get help.\n" if not defined $o;
 
 $values = do { local $/; <> };
 die "Missing input, exiting ...\n" unless $values;
