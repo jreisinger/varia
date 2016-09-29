@@ -1,5 +1,5 @@
 #!/usr/bin/perl -sw
-use vars qw($h $f $o);
+use vars qw($h $f $o $w $p);
 
 if ($h) {
         print <<EOF;
@@ -9,7 +9,10 @@ NAME
 
 SYNOPSIS
 
-  splunk-search -o=OPERATOR [-f=FIELD] [FILE(S)]
+  splunk-search -o=OPERATOR [-w] [-f=FIELD] [FILE(S)]
+
+    -w      append '*' to hostnames (wildcard mode)
+    -p      put parenthesis around hostnames
 
 EXAMPLES
 
@@ -27,7 +30,10 @@ die "Missing input, exiting ...\n" unless $values;
 @values = split ' ', $values;
 
 for $value (@values) {
-        $value .= '*' unless $value =~ /^[\d\.]+$/;
+        unless ($value =~ /^[\d\.]+$/) { # only hostnames not IP addresses
+            $value .= '*' if $w;
+            $value = "($value)" if $p;
+        }
         if ($f) {
                 $expr = qq($f=$value);
         } else {
