@@ -1,0 +1,20 @@
+#!/usr/bin/perl
+# Extract descriptions from scripts.
+use strict;
+use warnings;
+
+while (<>) {
+    my $desc;
+    chomp;
+    if ( ( $. > 1 and $. < 5 ) and /^##?([^#]+)/ ) {
+        $desc = lc $1;
+        $desc =~ s/\.$//;
+        print "$ARGV -$desc\n";
+        close ARGV;
+    } elsif (/^\s*$ARGV(.*)/) {
+        print "$ARGV$1\n";
+        close ARGV;
+    }
+} continue {    # reset $. line counter
+    close ARGV if eof;
+}
