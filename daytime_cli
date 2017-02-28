@@ -8,7 +8,9 @@ use Socket;
 
 use constant DEFAULT_ADDR   => 'wwv.nist.gov';
 use constant PORT           => 13; # daytime service
+# ... my $port = getservbyname('daytime', 'tcp')
 use constant IPPROTO_TCP    => 6;  # TCP protocol number used by socket()
+# ... my $protocol = getprotobyname('tcp') 
 
 # Construct the destination address for the socket
 my $address     = shift || DEFAULT_ADDR; # dotted-quad or symbolic hostname
