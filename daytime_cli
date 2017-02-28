@@ -19,6 +19,7 @@ my $destination = sockaddr_in(PORT, $packed_addr);
 
 # Create the socket (communication endpoint) in SOCK filehandle
 socket(SOCK,PF_INET,SOCK_STREAM,IPPROTO_TCP) or die "Can't make a socket: $!";
+# ... PF_INET == AF_INET (Protocol/Address Family)
 # Connect local socket SOCK to the remote socket
 connect(SOCK,$destination)                   or die "Can't connect: $!";
 
