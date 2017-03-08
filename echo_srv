@@ -41,6 +41,18 @@ while (1) {
     warn "connection from [", inet_ntoa($his_addr), ", $port]\n";
 
     # Handle the connection
+    $SESSION->autoflush(1);
+    while (<$SESSION>) {
+        $bytes_in += length($_);
+        chomp;
+
+        my $msg_out = (scalar reverse $_) . "\n";
+        print $SESSION $msg_out;
+        $bytes_out += length($msg_out);
+    }
+
+    warn "conenction from [", inet_ntoa($his_addr), ", $port] finished\n";
+    close $SESSION;
 }
 
 # Clean up - actually never reached since the code is designed to be terminated
