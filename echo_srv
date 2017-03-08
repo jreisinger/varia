@@ -34,8 +34,9 @@ listen(SOCK, SOMAXCONN) or die "listen() failed: $!";
 
 warn "waiting for incoming connections on port $port...\n";
 
+my $SESSION;
 while (1) {
-    next unless my $remote_addr = accept(SESSION, SOCK);
+    next unless my $remote_addr = accept($SESSION, SOCK);
     # Unpack client's address
     my ($port, $his_addr) = sockaddr_in($remote_addr);
     warn "connection from [", inet_ntoa($his_addr), ", $port]\n";
