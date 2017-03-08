@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# TCP echo service server.
+# TCP reverse echo service server.
 # Usage: echo_srv [port]
 use strict;
 use warnings;
