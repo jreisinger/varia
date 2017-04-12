@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# Check common error in serverclass.conf
+# Search for a common error in serverclass.conf
 use strict;
 use warnings;
 
