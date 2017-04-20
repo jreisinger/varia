@@ -19,7 +19,7 @@ while (<>) {
     if ($in_stanza and /\:([^\:]+)\:/) {
         my $class2 = $1;
         unless ($class eq $class2) {
-            print "Error on line $.: $_";
+            print "Error in $ARGV on line $.: $_";
             print "    '$class2' should be '$class', I think\n";
         }
     }
