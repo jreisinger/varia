@@ -79,8 +79,15 @@ sub get_repo_info {
     my $username = shift;
 
     # API v3
+    use Net::SSL;
+    use LWP::UserAgent;
+    my $ua  = LWP::UserAgent->new(
+        ssl_opts => { verify_hostname => 0 },
+    );
     my $url  = "https://api.github.com/users/$username/repos";
-    my $html = get($url);
+    my $response = $ua->get($url);
+    my $html = $response->content;
+    #my $html = get($url);
     die "Couldn't get data from $url\n" unless defined $html;
     my $decoded_json = decode_json $html;
 
