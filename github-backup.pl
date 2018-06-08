@@ -99,6 +99,8 @@ sub clone_repo {
     my $repo_url = shift;
     my $dest_dir = shift;
 
+    my $old_dir = getcwd();
+
     chdir $dest_dir if getcwd ne $dest_dir;
 
     my $git_cmd = "git clone --quiet --mirror $repo_url";
@@ -112,5 +114,7 @@ sub clone_repo {
     } else {
         print "'$repo_url' cloned to $dest_dir.\n";
     }
+
+    chdir $old_dir;
 }
 
